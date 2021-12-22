@@ -37,7 +37,7 @@ else
     psi0 = randomMPS(sites, M)
 end
 H = generate_MPO(graph, sites, params)
-obs = DMRGObserver(["Sx", "Sy", "Sz"], sites; energy_tol=etresh)
+obs = DMRGObserver(; energy_tol=etresh)
 
 # --------------- perform 2-site DMRG ----------------
 psi = psi0
