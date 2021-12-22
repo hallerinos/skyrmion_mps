@@ -27,7 +27,7 @@ outputlevel = 1  # increase output from 0,1,2
 # --------------- initialization ----------------
 sweeps = Sweeps(Ns)  # initialize sweeps object
 maxdim!(sweeps, M)
-N, graph = triangular_disk(Nx, Ny)  # define the graph
+N, graph = triangular_disk(Nx, Ny)  # see available graphs in lattices.jl
 psi0 = nothing
 if restart
     psi0 = states[1]
@@ -51,7 +51,7 @@ for n=1:ns
 end
 append!(energy, [es])
 
-# --------------- plot the polarization ----------------
+# --------------- plot the magnetization ----------------
 ns = unique([[(b.s1, b.r1) for b in graph]; [(b.s2, b.r2) for b in graph]])
 xs = [n[2][1] for n in ns]
 ys = [n[2][2] for n in ns]
