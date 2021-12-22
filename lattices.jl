@@ -6,7 +6,6 @@ function rhomboid_zigzag(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
 
     a1 = [1.0, 0.0, 0.]
     a2 = [0.5, sqrt(3)/2, 0.]
-    # ez = [0., 0., 0.]
 
     lattPos = []
     for nx in 0:Nx-1, ny in 0:Ny-1
@@ -37,7 +36,6 @@ function rhomboid_spiral(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
     a1 = [1.0, 0.0, 0.]
     a2 = [0.5, sqrt(3)/2, 0.]
     a3 = [-0.5, sqrt(3)/2, 0.]
-    # ez = [0., 0., 0.]
 
     lattPos = []
     pos = 0.0.*a1
@@ -80,7 +78,6 @@ function triangular_disk(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
 
     a1 = [1.0, 0.0, 0.]
     a2 = [0.5, sqrt(3)/2, 0.]
-    # ez = [0., 0., 0.]
 
     lattPos = []
     Nxs = -4Nx:4Nx
@@ -113,7 +110,6 @@ function square(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
 
     a1 = [1.0, 0.0, 0.]
     a2 = [0.0, 1.0, 0.]
-    # ez = [0., 0., 0.]
 
     lattPos = []
     for nx in 0:Nx-1, ny in 0:Ny-1
@@ -143,7 +139,6 @@ function square_disk(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
 
   a1 = [1.0, 0.0, 0.]
   a2 = [0.0, 1.0, 0.]
-  # ez = [0., 0., 0.]
 
   lattPos = []
   Nxs = -4Nx:4Nx
@@ -178,7 +173,6 @@ function kagome(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
     a1 /= norm(a1)  # ensure normalized lattice vectors
     a2 = [0.5, sqrt(3)/2, 0.]
     a2 /= norm(a1)  # ensure normalized lattice vectors
-    # ez = [0., 0., 0.]
     b1 = 2.0.*a1
     b2 = 2.0.*a2
 
@@ -227,7 +221,6 @@ function kagome_disk(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
     a1 /= norm(a1)  # ensure normalized lattice vectors
     a2 = [0.5, sqrt(3)/2, 0.]
     a2 /= norm(a1)  # ensure normalized lattice vectors
-    # ez = [0., 0., 0.]
     b1 = 2.0.*a1
     b2 = 2.0.*a2
 
@@ -262,7 +255,6 @@ function honeycomb(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
 
     b1 = 0.5.*[3.0, +sqrt(3), 0.]
     b2 = 0.5.*[3.0, -sqrt(3), 0.]
-    # ez = [0., 0., 0.]
     a1 = [-1, +sqrt(3), 0.]
     a1 /= norm(a1)  # ensure normalized lattice vectors
     a2 = [+1, +sqrt(3), 0.]
