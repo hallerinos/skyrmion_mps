@@ -1,5 +1,5 @@
 using ITensors, PyPlot, PyCall, LinearAlgebra
-pygui(true)
+# pygui(true)
 
 include("bonds.jl")
 include("lattices.jl")
@@ -55,13 +55,16 @@ append!(energy, [es])
 ns = unique([[(b.s1, b.r1) for b in graph]; [(b.s2, b.r2) for b in graph]])
 xs = [n[2][1] for n in ns]
 ys = [n[2][2] for n in ns]
-for state in states
-    lobs = [expect(state, lob) for lob in ["Sx", "Sy", "Sz"]];
-    figure(figsize=2.0.*((3+3/8), (3+3/8)/1.25)); scatter(xs, ys, cmap="RdBu_r", c=lobs[3], marker="h", s=1600, vmin=-0.5, vmax=0.5); 
-    quiver(xs, ys, lobs[1],lobs[2], scale=.5, units="xy", pivot="middle", color="white");
-    maxx = maximum(xs);
-    maxy = maximum(ys);
+for (i, state) in enumerate(states)
+    lobs = [expect(state, lob) for lob in ["Sx", "Sy", "Sz"]]
+    fig = figure(figsize=2.0.*((3+3/8), (3+3/8)/1.25))
+    scatter(xs, ys, cmap="RdBu_r", c=lobs[3], marker="h", s=1600, vmin=-0.5, vmax=0.5)
+    quiver(xs, ys, lobs[1],lobs[2], scale=.5, units="xy", pivot="middle", color="white")
+    maxx = maximum(xs)
+    maxy = maximum(ys)
     ylim(-maxy-1/sqrt(3),maxy+1/sqrt(3))
     xlim(-maxx-1,maxx+1)
     axis("off")
+    savefig("magnetization_B$(B)_J$(J)_K$(K)_M$(M)_state_$(i).pdf")
 end
+0;
