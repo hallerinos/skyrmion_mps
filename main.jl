@@ -1,5 +1,4 @@
-using ITensors, PyPlot, PyCall, LinearAlgebra
-# pygui(true)
+using ITensors, LinearAlgebra, Plots
 
 include("bonds.jl")
 include("lattices.jl")
@@ -42,29 +41,19 @@ obs = DMRGObserver(; energy_tol=etresh)
 # --------------- perform 2-site DMRG ----------------
 psi = psi0
 states = Vector{MPS}(undef, ns)
-energy = []
-es = []
 for n=1:ns
     global ene, psi = (n==1 ? dmrg(H, psi, sweeps, observer=obs, outputlevel=outputlevel) : dmrg(H, states[1:n-1], psi, sweeps, weight=1000, observer=obs, outputlevel=outputlevel))
-    append!(es, ene)
     global states[n] = psi
 end
-append!(energy, [es])
 
-# --------------- plot the magnetization ----------------
+# --------------- plot the magnetization (using Plots.jl) ----------------
 ns = unique([[(b.s1, b.r1) for b in graph]; [(b.s2, b.r2) for b in graph]])
 xs = [n[2][1] for n in ns]
 ys = [n[2][2] for n in ns]
 for (i, state) in enumerate(states)
     lobs = [expect(state, lob) for lob in ["Sx", "Sy", "Sz"]]
-    fig = figure(figsize=2.0.*((3+3/8), (3+3/8)/1.25))
-    scatter(xs, ys, cmap="RdBu_r", c=lobs[3], marker="h", s=1600, vmin=-0.5, vmax=0.5)
-    quiver(xs, ys, lobs[1],lobs[2], scale=.5, units="xy", pivot="middle", color="white")
-    maxx = maximum(xs)
-    maxy = maximum(ys)
-    ylim(-maxy-1/sqrt(3),maxy+1/sqrt(3))
-    xlim(-maxx-1,maxx+1)
-    axis("off")
+    fig = scatter(xs, ys, marker_z=-lobs[3], marker=:h, markersize=11, size=(200,200/1.15), c=:RdBu, legend=false)
+    quiver!(xs, ys, quiver=(lobs[1],lobs[2]), color=:white, showaxis=false, ticks=false, legend=false)
     savefig("magnetization_B$(B)_J$(J)_K$(K)_M$(M)_state_$(i).pdf")
 end
 0;
