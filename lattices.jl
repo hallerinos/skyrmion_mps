@@ -88,6 +88,13 @@ function triangular_disk(Nx::Int, Ny::Int; kwargs...) :: Tuple{Int64, Graph}
       end
     end
     lattPos = unique(lattPos)
+    for (idlp,lp) in enumerate(lattPos)
+      x, y = getindex(lp,1), getindex(lp,2)
+      plt.scatter(x,y)
+      plt.text(x,y,"$idlp")
+    end
+    plt.savefig("nodes.png")
+    plt.close()
 
     nns = [a1, -a2, -a1+a2]  # consider only nearest neighbors
 

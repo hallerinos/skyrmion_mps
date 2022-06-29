@@ -1,4 +1,4 @@
-using ITensors, Observers, ITensorTDVP, DataFrames, JLD, UUIDs, CSV
+using ITensors, Observers, ITensorTDVP, DataFrames, JLD, UUIDs, CSV, PyPlot
 
 include("bonds.jl")
 include("lattices.jl")
@@ -24,7 +24,7 @@ etresh = 1e-6  # naïve stopping criterion
 # --------------- MPS settings ----------------
 M = 32  # set the maximum bond dimension
 Ns = 1000  # set the maximum number of sweeps
-outputlevel = 1  # increase output from 0,1,2
+outputlevel = 2  # increase output from 0,1,2
 # --------------- initialization ----------------
 sweeps = Sweeps(Ns)  # initialize sweeps object
 maxdim!(sweeps, M)
@@ -36,7 +36,7 @@ sites = siteinds("S=1/2", N)
 obs_dmrg = DMRGObserver(; energy_tol=etresh)
 state = ["Dn" for n=1:N]
 # --------------- main loop ---------------------
-for B in (10:10).*(-absD/10)
+for B in (1:10).*(-absD/10)
     df = DataFrame()
     p["-B0"] = B
     psi = randomMPS(sites; linkdims=M)
@@ -51,15 +51,15 @@ for B in (10:10).*(-absD/10)
     df[!, "sweep"] = [0 for i=1:size(df,1)]
     df[!, "half_sweep"] = [0 for i=1:size(df,1)]
     df[!, "bond"] = [0 for i=1:size(df,1)]
-    df[!, "E"] = [ene for i=1:size(df,1)]
+    df[!, "E"] = [real(ene) for i=1:size(df,1)]
 
     # --------------- perform 1-site DMRG ----------------
     ene, psi = dmrg1(H, psi, sweeps, weight=1000, observer=obs_dmrg, nps=nps, df=df, outputlevel=outputlevel)
 
     # --------------- plot the magnetization ----------------
     include("plot_magnetization.jl")
-    fn = "$dir/$(uuid1()).png"
-    plot_magnetization(psi, graph, fn, 2000)
+    fn = "$dir/$(uuid1())"
+    plot_magnetization(psi, graph, "$(fn).png", 2000)
     jldopen("$(fn).jld", "w") do file
         write(file, "fn", fn)
         write(file, "psi", psi)
