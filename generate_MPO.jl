@@ -1,3 +1,4 @@
+using LinearAlgebra
 # some convenient definitions
 dvec(r) = cross([0,0,1], r)
 function epsilon(i,j,k)

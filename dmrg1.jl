@@ -216,6 +216,7 @@ function dmrg1(H::MPO, psi0::MPS, sweeps::Sweeps; kwargs...)::Tuple{Number, MPS,
           spec=spec,
           outputlevel=outputlevel,
           sweep_is_done=sweep_is_done,
+          kwargs...
         )
     end
     end
