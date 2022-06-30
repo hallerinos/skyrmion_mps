@@ -33,20 +33,43 @@ end
 
 # measure overload based on changes of local observables
 function ITensors.measure!(o::DMRGObserver;kwargs...)
-    df = DataFrame()
-    for s in ["Sx", "Sy", "Sz"]
-        df[!, s] = expect(kwargs[:psi],s)
+    measured = false
+    if kwargs[:pa]==true
+        df = DataFrame()
+        for s in ["Sx", "Sy", "Sz"]
+            df[!, s] = expect(kwargs[:psi],s)
+        end
+        df[!, "X"] = getindex.(kwargs[:nps],1)
+        df[!, "Y"] = getindex.(kwargs[:nps],2)
+        df[!, "Z"] = getindex.(kwargs[:nps],3)
+        df[!, "sweep"] = [kwargs[:sweep] for i=1:size(df,1)]
+        df[!, "half_sweep"] = [kwargs[:half_sweep] for i=1:size(df,1)]
+        df[!, "bond"] = [kwargs[:bond] for i=1:size(df,1)]
+        df[!, "E"] = [real(kwargs[:energy]) for i=1:size(df,1)]
+        append!(kwargs[:df], df)
+
+        CSV.write("$(kwargs[:fn]).csv", kwargs[:df])
+        measured = true
     end
-    df[!, "X"] = getindex.(kwargs[:nps],1)
-    df[!, "Y"] = getindex.(kwargs[:nps],2)
-    df[!, "Z"] = getindex.(kwargs[:nps],3)
-    df[!, "sweep"] = [kwargs[:sweep] for i=1:size(df,1)]
-    df[!, "half_sweep"] = [kwargs[:half_sweep] for i=1:size(df,1)]
-    df[!, "bond"] = [kwargs[:bond] for i=1:size(df,1)]
-    df[!, "E"] = [real(kwargs[:energy]) for i=1:size(df,1)]
-    append!(kwargs[:df], df)
     if kwargs[:bond]==length(kwargs[:psi])÷2 && kwargs[:half_sweep]==2
         push!(o.energies, kwargs[:energy])
+
+        if !measured
+            df = DataFrame()
+            for s in ["Sx", "Sy", "Sz"]
+                df[!, s] = expect(kwargs[:psi],s)
+            end
+            df[!, "X"] = getindex.(kwargs[:nps],1)
+            df[!, "Y"] = getindex.(kwargs[:nps],2)
+            df[!, "Z"] = getindex.(kwargs[:nps],3)
+            df[!, "sweep"] = [kwargs[:sweep] for i=1:size(df,1)]
+            df[!, "half_sweep"] = [kwargs[:half_sweep] for i=1:size(df,1)]
+            df[!, "bond"] = [kwargs[:bond] for i=1:size(df,1)]
+            df[!, "E"] = [real(kwargs[:energy]) for i=1:size(df,1)]
+            append!(kwargs[:df], df)
+
+            CSV.write("$(kwargs[:fn]).csv", kwargs[:df])
+        end
     end
     return
 end
